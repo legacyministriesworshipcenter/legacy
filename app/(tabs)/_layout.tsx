@@ -67,8 +67,7 @@ export default function TabLayout() {
         name="visit/index"
         options={{
           href: null,
-          headerTitle: 'Plan Your Visit',
-          headerTintColor: Colors[colorScheme ?? 'light'].tint,
+          headerShown: false,
         }}
       />
     </Tabs>
