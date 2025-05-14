@@ -53,7 +53,7 @@ export default function TabLayout() {
       />
 
       {/* HIDDEN */}
-      {['connect/groups', 'connect/prayer', 'connect/checkin', 'visit/index'].map((screen) => (
+      {['connect/groups', 'connect/prayer', 'connect/checkin'].map((screen) => (
         <Tabs.Screen
           key={screen}
           name={screen}
@@ -63,6 +63,14 @@ export default function TabLayout() {
           }}
         />
       ))}
+      <Tabs.Screen
+        name="visit/index"
+        options={{
+          href: null,
+          headerTitle: 'Plan Your Visit',
+          headerTintColor: Colors[colorScheme ?? 'light'].tint,
+        }}
+      />
     </Tabs>
   );
 }
