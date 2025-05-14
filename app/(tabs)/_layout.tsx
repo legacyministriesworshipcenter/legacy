@@ -58,7 +58,7 @@ export default function TabLayout() {
           key={screen}
           name={screen}
           options={{
-            tabBarItemStyle: { display: 'none' },
+            tabBarButton: () => null,
             href: null,
             // only for "visit" do we override the header title
             ...(screen === 'visit' && {
