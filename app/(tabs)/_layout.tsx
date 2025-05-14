@@ -53,7 +53,7 @@ export default function TabLayout() {
       />
 
       {/* HIDDEN */}
-      {['groups', 'prayer', 'checkin', 'visit'].map((screen) => (
+      {['connect/groups', 'connect/prayer', 'connect/checkin', 'visit/index'].map((screen) => (
         <Tabs.Screen
           key={screen}
           name={screen}
