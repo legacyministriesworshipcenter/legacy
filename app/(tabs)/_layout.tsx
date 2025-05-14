@@ -64,10 +64,9 @@ export default function TabLayout() {
         />
       ))}
       <Tabs.Screen
-        name="visit/index"
+        name="visit"
         options={{
           href: null,
-          tabBarStyle: { display: 'none' },
           headerTitle: 'Plan Your Visit',
           headerTintColor: Colors[colorScheme ?? 'light'].tint,
         }}
