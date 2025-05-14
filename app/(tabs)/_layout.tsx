@@ -23,6 +23,11 @@ export default function TabLayout() {
             <Ionicons name="person-circle" size={26} color="gray" />
           </Pressable>
         ),
+        headerRight: () => (
+          <Pressable hitSlop={8} onPress={() => router.push('/profile')} style={{ paddingRight: 16 }}>
+            <Ionicons name="person-circle" size={26} color="gray" />
+          </Pressable>
+        ),
 
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         tabBarButton: HapticTab,
