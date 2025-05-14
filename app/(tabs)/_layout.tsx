@@ -53,21 +53,25 @@ export default function TabLayout() {
       />
 
       {/* HIDDEN */}
-      {['groups','prayer','checkin','visit'].map((screen) => (
+      {['groups','prayer','checkin'].map((screen) => (
         <Tabs.Screen
           key={screen}
           name={screen}
           options={{
             href: null,
             tabBarStyle: { display: 'none' },
-            // only for "visit" do we override the header title
-            ...(screen === 'visit' && {
-              headerTitle: 'Plan Your Visit',
-              headerTintColor: Colors[colorScheme ?? 'light'].tint,
-            }),
           }}
         />
       ))}
+      <Tabs.Screen
+        name="visit/index"
+        options={{
+          href: null,
+          tabBarStyle: { display: 'none' },
+          headerTitle: 'Plan Your Visit',
+          headerTintColor: Colors[colorScheme ?? 'light'].tint,
+        }}
+      />
     </Tabs>
   );
 }
