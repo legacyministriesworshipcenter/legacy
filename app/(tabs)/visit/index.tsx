@@ -1,4 +1,3 @@
-
 import React, { useMemo, useState } from 'react';
 import { View, Text, Button, Alert, Platform } from 'react-native';
 import { router } from 'expo-router';
