@@ -67,7 +67,7 @@ export default function TabLayout() {
         name="visit"
         options={{
           href: null,
-          tabBarStyle: undefined,
+          tabBarButton: () => null,
         }}
       />
     </Tabs>
