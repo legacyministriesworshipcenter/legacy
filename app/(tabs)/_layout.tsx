@@ -53,7 +53,7 @@ export default function TabLayout() {
       />
 
       {/* HIDDEN */}
-      {['groups','prayer','checkin','visit/index'].map((screen) => (
+      {['groups','prayer','checkin'].map((screen) => (
         <Tabs.Screen
           key={screen}
           name={screen}
@@ -63,6 +63,13 @@ export default function TabLayout() {
           }}
         />
       ))}
+      <Tabs.Screen
+        name="visit"
+        options={{
+          href: null,
+          tabBarStyle: undefined,
+        }}
+      />
     </Tabs>
   );
 }
