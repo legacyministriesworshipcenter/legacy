@@ -21,9 +21,9 @@ import { supabase } from '@/lib/supabase';
    ──────────────────────────────────────────────────────────── */
 const LINKS = [
   { title: 'Give',     icon: 'gift',    route: '/(tabs)/give' },
-  { title: 'Prayer',   icon: 'heart',   route: '/connect/prayer' },
-  { title: 'Groups',   icon: 'people',  route: '/connect/groups' },
-  { title: 'Check-In', icon: 'qr-code', route: '/connect/checkin' },
+  { title: 'Prayer',   icon: 'heart',   route: '/(tabs)/connect/prayer' },
+  { title: 'Groups',   icon: 'people',  route: '/(tabs)/connect/groups' },
+  { title: 'Check-In', icon: 'qr-code', route: '/(tabs)/connect/checkin' },
 ] as const;
 /* ──────────────────────────────────────────────────────────── */
 

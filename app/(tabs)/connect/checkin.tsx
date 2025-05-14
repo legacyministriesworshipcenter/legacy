@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native';
 
-export default function GroupsScreen() {
+export default function CheckInScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 18, color: '#999' }}>Groups coming soon!</Text>
+      <Text>Check-In Screen (Under Construction)</Text>
     </View>
   );
 }

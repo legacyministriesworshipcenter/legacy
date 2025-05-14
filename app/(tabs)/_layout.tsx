@@ -1,12 +1,12 @@
 import { Tabs, router } from 'expo-router';
 import React from 'react';
-import { Platform, Pressable } from 'react-native';
+import { Platform, Pressable, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
 import { HapticTab } from '@/components/HapticTab';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { ThemedText } from '@/components/ThemedText';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -23,7 +23,6 @@ export default function TabLayout() {
             <Ionicons name="person-circle" size={26} color="gray" />
           </Pressable>
         ),
-
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
@@ -67,25 +66,46 @@ export default function TabLayout() {
         }}
       />
 
-      {/* HIDDEN CONNECT STACK */}
-      {['connect/groups','connect/prayer','connect/checkin'].map((screen) => (
-        <Tabs.Screen
-          key={screen}
-          name={screen}
-          options={{
-            href: null,
-            tabBarItemStyle: { display: 'none' },
-          }}
-        />
-      ))}
-
       {/* HIDDEN VISIT SCREEN */}
       <Tabs.Screen
         name="visit/index"
         options={{
           href: null,
-          tabBarItemStyle: { display: 'none' },  // <— only hide its tab
-          // no headerShown override, so you'll still get headerRight on this screen
+          tabBarItemStyle: { display: 'none' },
+          headerShown: true,
+          headerTransparent: false,
+          headerStyle: {
+            backgroundColor: colorScheme === 'dark' ? '#151718' : '#fff',
+          },
+          headerLeft: () => (
+            <Pressable
+              hitSlop={8}
+              onPress={() => router.back()}
+              style={{ paddingLeft: 16 }}
+            >
+              <Ionicons name="arrow-back" size={26} color="gray" />
+            </Pressable>
+          ),
+          headerRight: () => (
+            <Pressable
+              hitSlop={8}
+              onPress={() => router.push('/profile')}
+              style={{ paddingRight: 16 }}
+            >
+              <Ionicons name="person-circle" size={26} color="gray" />
+            </Pressable>
+          ),
+          headerTitle: () => (
+            <View style={{ alignItems: 'center', paddingBottom: 8 }}>
+              <ThemedText
+                type="title"
+                style={{ fontSize: 22, fontWeight: '700' }}
+              >
+                Plan Your Visit
+              </ThemedText>
+            </View>
+          ),
+          headerTitleAlign: 'center',
         }}
       />
     </Tabs>

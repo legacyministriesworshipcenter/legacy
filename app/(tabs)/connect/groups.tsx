@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native';
 
-export default function PrayerScreen() {
+export default function GroupsScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 18, color: '#999' }}>Prayer requests coming soon!</Text>
+      <Text>Groups Screen (Under Construction)</Text>
     </View>
   );
 }
