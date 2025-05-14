@@ -23,11 +23,6 @@ export default function TabLayout() {
             <Ionicons name="person-circle" size={26} color="gray" />
           </Pressable>
         ),
-        headerRight: () => (
-          <Pressable hitSlop={8} onPress={() => router.push('/profile')} style={{ paddingRight: 16 }}>
-            <Ionicons name="person-circle" size={26} color="gray" />
-          </Pressable>
-        ),
 
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         tabBarButton: HapticTab,
@@ -38,41 +33,59 @@ export default function TabLayout() {
       {/* VISIBLE */}
       <Tabs.Screen
         name="index"
-        options={{ title: 'Home', tabBarIcon: ({ color }) => <Ionicons name="home" size={28} color={color}/> }}
+        options={{ 
+          title: 'Home', 
+          tabBarIcon: ({ color }) => <Ionicons name="home" size={28} color={color}/> 
+        }}
       />
       <Tabs.Screen
         name="connect"
-        options={{ title: 'Connect', tabBarIcon: ({ color }) => <Ionicons name="people" size={28} color={color}/> }}
+        options={{ 
+          title: 'Connect', 
+          tabBarIcon: ({ color }) => <Ionicons name="people" size={28} color={color}/> 
+        }}
       />
       <Tabs.Screen
         name="media"
-        options={{ title: 'Media', tabBarIcon: ({ color }) => <Ionicons name="play-circle" size={28} color={color}/> }}
+        options={{ 
+          title: 'Media', 
+          tabBarIcon: ({ color }) => <Ionicons name="play-circle" size={28} color={color}/> 
+        }}
       />
       <Tabs.Screen
         name="give"
-        options={{ title: 'Give', tabBarIcon: ({ color }) => <Ionicons name="heart" size={28} color={color}/> }}
+        options={{ 
+          title: 'Give', 
+          tabBarIcon: ({ color }) => <Ionicons name="heart" size={28} color={color}/> 
+        }}
       />
       <Tabs.Screen
         name="more"
-        options={{ title: 'More', tabBarIcon: ({ color }) => <Ionicons name="menu" size={28} color={color}/> }}
+        options={{ 
+          title: 'More', 
+          tabBarIcon: ({ color }) => <Ionicons name="menu" size={28} color={color}/> 
+        }}
       />
 
-      {/* HIDDEN */}
-      {['connect/groups', 'connect/prayer', 'connect/checkin'].map((screen) => (
+      {/* HIDDEN CONNECT STACK */}
+      {['connect/groups','connect/prayer','connect/checkin'].map((screen) => (
         <Tabs.Screen
           key={screen}
           name={screen}
           options={{
             href: null,
-            tabBarStyle: { display: 'none' },
+            tabBarItemStyle: { display: 'none' },
           }}
         />
       ))}
+
+      {/* HIDDEN VISIT SCREEN */}
       <Tabs.Screen
         name="visit/index"
         options={{
           href: null,
-          headerShown: false,
+          tabBarItemStyle: { display: 'none' },  // <— only hide its tab
+          // no headerShown override, so you'll still get headerRight on this screen
         }}
       />
     </Tabs>

@@ -8,23 +8,30 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import ThemedTextInput from '@/components/ui/ThemedTextInput';
 
+/** build the next six Sundays in YYYY-MM-DD */
 function getNextSixSundays(): string[] {
   const dates: string[] = [];
   let d = dayjs();
   while (d.day() !== 0) d = d.add(1, 'day');
-  for (let i = 0; i < 6; i++) dates.push(d.add(i, 'week').format('YYYY-MM-DD'));
+  for (let i = 0; i < 6; i++) {
+    dates.push(d.add(i, 'week').format('YYYY-MM-DD'));
+  }
   return dates;
 }
 
 export default function PlanVisitScreen() {
   const scheme = useColorScheme();
-  const tint   = Colors[scheme ?? 'light'].tint;
+  // always-contrast text color
+  const textColor   = scheme === 'dark' ? '#FFF' : '#000';
+  // dropdown background to avoid white-on-white
+  const dropdownBg  = scheme === 'dark' ? '#333' : '#FFF';
 
   const [name,  setName]  = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [date,  setDate]  = useState<string>();
   const [kids,  setKids]  = useState<'yes' | 'no' | undefined>();
+
   const sundayOptions = useMemo(getNextSixSundays, []);
 
   async function handleSubmit() {
@@ -38,11 +45,15 @@ export default function PlanVisitScreen() {
 
   return (
     <View style={{ flex: 1, padding: 24, gap: 16 }}>
-      <Text style={{ fontSize: 22, fontWeight: '700', color: tint }}>
+      <Text style={{ fontSize: 22, fontWeight: '700', color: textColor }}>
         Plan Your Visit
       </Text>
 
-      <ThemedTextInput placeholder="Name*" value={name} onChangeText={setName} />
+      <ThemedTextInput
+        placeholder="Name*"
+        value={name}
+        onChangeText={setName}
+      />
       <ThemedTextInput
         placeholder="Email*"
         value={email}
@@ -57,29 +68,39 @@ export default function PlanVisitScreen() {
         keyboardType="phone-pad"
       />
 
-      <Text style={{ color: tint, fontWeight: '600' }}>Select a Sunday*</Text>
+      <Text style={{ color: textColor, fontWeight: '600' }}>
+        Select a Sunday*
+      </Text>
       <Picker
         selectedValue={date}
         onValueChange={setDate}
-        style={{ color: tint }}
-        itemStyle={Platform.OS === 'ios' ? { color: tint } : undefined}
+        style={{
+          color: textColor,
+          backgroundColor: dropdownBg,
+        }}
+        itemStyle={Platform.OS === 'ios' ? { color: textColor } : undefined}
       >
         <Picker.Item label="— choose a date —" value={undefined} />
-        {sundayOptions.map((d) => (
+        {sundayOptions.map(d => (
           <Picker.Item key={d} label={d} value={d} />
         ))}
       </Picker>
 
-      <Text style={{ color: tint, fontWeight: '600' }}>Bringing kids?*</Text>
+      <Text style={{ color: textColor, fontWeight: '600' }}>
+        Bringing kids?*
+      </Text>
       <Picker
         selectedValue={kids}
-        onValueChange={(v) => setKids(v as any)}
-        style={{ color: tint }}
-        itemStyle={Platform.OS === 'ios' ? { color: tint } : undefined}
+        onValueChange={v => setKids(v as 'yes' | 'no')}
+        style={{
+          color: textColor,
+          backgroundColor: dropdownBg,
+        }}
+        itemStyle={Platform.OS === 'ios' ? { color: textColor } : undefined}
       >
         <Picker.Item label="— select —" value={undefined} />
         <Picker.Item label="Yes" value="yes" />
-        <Picker.Item label="No" value="no" />
+        <Picker.Item label="No"  value="no" />
       </Picker>
 
       <Button title="Submit" onPress={handleSubmit} />
