@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
@@ -7,13 +7,12 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
-import { Ionicons } from '@expo/vector-icons';
-import { Pressable, Button } from 'react-native';
 
 export default function EventDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const scheme = useColorScheme();
   const tint = Colors[scheme ?? 'light'].tint;
+  const buttonBackground = Colors[scheme ?? 'light'].buttonBackground;
 
   const fetchEventDetail = async () => {
     const { data, error } = await supabase.from('events').select('*').eq('id', id).single();
@@ -49,11 +48,14 @@ export default function EventDetailScreen() {
         </ThemedText>
         <ThemedText style={styles.description}>{event.description || 'No description'}</ThemedText>
         <ThemedText style={styles.location}>Location: {event.location || 'TBD'}</ThemedText>
-        <Button
-          title="RSVP"
-          onPress={() => alert('RSVP functionality to be implemented')}
-          color={tint}
-        />
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: buttonBackground }]}
+          onPress={() => Alert.alert('RSVP functionality to be implemented')}
+          accessibilityLabel="RSVP for the event"
+          accessibilityHint="Submits your RSVP for this event"
+        >
+          <ThemedText style={styles.buttonText}>RSVP</ThemedText>
+        </TouchableOpacity>
       </ScrollView>
     </ThemedView>
   );
@@ -68,4 +70,11 @@ const styles = StyleSheet.create({
   date: { fontSize: 16, color: '#555', marginBottom: 8 },
   description: { fontSize: 16, marginBottom: 8 },
   location: { fontSize: 16, fontStyle: 'italic', marginBottom: 16 },
+  button: {
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  buttonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
 });

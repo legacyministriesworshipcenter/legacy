@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
-import { View, ActivityIndicator, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, ActivityIndicator, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { supabase } from '@/lib/supabase';
-import ThemedTextInput from '@/components/ui/ThemedTextInput';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
-import { TouchableOpacity } from 'react-native';
 
 export default function PrayerScreen() {
   console.log('PrayerScreen: Rendering');
   const scheme = useColorScheme();
   const tint = Colors[scheme ?? 'light'].tint;
-  const [request, setRequest] = useState('');
-  const [loading, setLoading] = useState(false);
+  const buttonBackground = Colors[scheme ?? 'light'].buttonBackground;
+  const [prayerRequest, setPrayerRequest] = useState('');
   const [submissionStatus, setSubmissionStatus] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const submitRequest = async () => {
-    if (request.trim().length === 0) {
-      Alert.alert('Empty Request', 'Please write your prayer request.');
-      setSubmissionStatus('Error: Please write your prayer request.');
+    if (prayerRequest.trim().length < 5) {
+      Alert.alert('Error', 'Prayer request must be at least 5 characters long.');
+      setSubmissionStatus('Error: Prayer request must be at least 5 characters long.');
       return;
     }
 
@@ -30,52 +29,51 @@ export default function PrayerScreen() {
     const user = supabase.auth.user();
     if (!user) {
       setLoading(false);
-      Alert.alert('Error', 'You must be logged in to submit a prayer request.', [
+      Alert.alert('Not Logged In', 'Please log in to submit a prayer request.', [
         { text: 'Cancel', style: 'cancel' },
         { text: 'Log In', onPress: () => router.push('/(auth)/login') },
       ]);
-      setSubmissionStatus('Error: You must be logged in to submit a prayer request.');
+      setSubmissionStatus('Error: Please log in to submit a prayer request.');
       return;
     }
 
     const { error } = await supabase.from('prayer_requests').insert({
-      request,
       user_id: user.id,
+      request: prayerRequest.trim(),
     });
 
     setLoading(false);
 
     if (error) {
       console.log('Prayer Request Submission Error:', error);
-      Alert.alert('Submission Error', error.message);
+      Alert.alert('Submission Failed', error.message);
       setSubmissionStatus(`Error: ${error.message}`);
     } else {
       console.log('Prayer Request Submitted Successfully');
-      Alert.alert('Request Submitted', 'Your prayer request has been received.', [
+      Alert.alert('Success', 'Your prayer request has been submitted!', [
         { text: 'OK', onPress: () => router.navigate('/(tabs)/connect') },
       ]);
-      setSubmissionStatus('Your prayer request has been received.');
-      setRequest('');
+      setSubmissionStatus('Your prayer request has been submitted!');
+      setPrayerRequest('');
     }
   };
 
   return (
     <ThemedView style={styles.container}>
       <ThemedText type="title" style={[styles.header, { color: tint }]}>
-        Submit Your Prayer Request
+        Submit a Prayer Request
       </ThemedText>
       <ThemedText style={[styles.subheader, { color: scheme === 'dark' ? '#ccc' : '#555' }]}>
-        Share your prayer needs with us, and we’ll lift them up in prayer.
+        Share your prayer needs with us.
       </ThemedText>
-      <ThemedTextInput
-        style={styles.input}
-        placeholder="Type your prayer request here..."
+      <TextInput
+        style={[styles.input, { color: scheme === 'dark' ? '#fff' : '#000' }]}
+        placeholder="Enter your prayer request (minimum 5 characters)"
+        placeholderTextColor={scheme === 'dark' ? '#888' : '#999'}
+        value={prayerRequest}
+        onChangeText={setPrayerRequest}
         multiline
         numberOfLines={4}
-        value={request}
-        onChangeText={setRequest}
-        accessibilityLabel="Enter your prayer request"
-        accessibilityHint="Type the prayer request you would like to submit"
       />
       {submissionStatus && (
         <ThemedText
@@ -91,7 +89,7 @@ export default function PrayerScreen() {
         <ActivityIndicator size="large" color={tint} style={styles.loader} />
       ) : (
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: tint }]}
+          style={[styles.button, { backgroundColor: buttonBackground }]}
           onPress={submitRequest}
           accessibilityLabel="Submit prayer request"
           accessibilityHint="Submits your prayer request to the church"

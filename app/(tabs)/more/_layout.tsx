@@ -85,6 +85,106 @@ export default function MoreLayout() {
           ),
         }}
       />
+      <Stack.Screen
+        name="admin/prayer-requests"
+        options={{
+          headerTitle: () => (
+            <View style={{ alignItems: 'center', paddingBottom: 8 }}>
+              <ThemedText
+                type="title"
+                style={{ fontSize: 22, fontWeight: '700' }}
+              >
+                Prayer Requests
+              </ThemedText>
+            </View>
+          ),
+          headerTitleAlign: 'center',
+          headerLeft: () => (
+            <Pressable
+              hitSlop={8}
+              onPress={() => router.back()}
+              style={{ paddingLeft: 16 }}
+            >
+              <Ionicons name="arrow-back" size={26} color="gray" />
+            </Pressable>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="admin/group-memberships"
+        options={{
+          headerTitle: () => (
+            <View style={{ alignItems: 'center', paddingBottom: 8 }}>
+              <ThemedText
+                type="title"
+                style={{ fontSize: 22, fontWeight: '700' }}
+              >
+                Group Memberships
+              </ThemedText>
+            </View>
+          ),
+          headerTitleAlign: 'center',
+          headerLeft: () => (
+            <Pressable
+              hitSlop={8}
+              onPress={() => router.back()}
+              style={{ paddingLeft: 16 }}
+            >
+              <Ionicons name="arrow-back" size={26} color="gray" />
+            </Pressable>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="admin/check-ins"
+        options={{
+          headerTitle: () => (
+            <View style={{ alignItems: 'center', paddingBottom: 8 }}>
+              <ThemedText
+                type="title"
+                style={{ fontSize: 22, fontWeight: '700' }}
+              >
+                Check-Ins
+              </ThemedText>
+            </View>
+          ),
+          headerTitleAlign: 'center',
+          headerLeft: () => (
+            <Pressable
+              hitSlop={8}
+              onPress={() => router.back()}
+              style={{ paddingLeft: 16 }}
+            >
+              <Ionicons name="arrow-back" size={26} color="gray" />
+            </Pressable>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="admin/events"
+        options={{
+          headerTitle: () => (
+            <View style={{ alignItems: 'center', paddingBottom: 8 }}>
+              <ThemedText
+                type="title"
+                style={{ fontSize: 22, fontWeight: '700' }}
+              >
+                Events
+              </ThemedText>
+            </View>
+          ),
+          headerTitleAlign: 'center',
+          headerLeft: () => (
+            <Pressable
+              hitSlop={8}
+              onPress={() => router.back()}
+              style={{ paddingLeft: 16 }}
+            >
+              <Ionicons name="arrow-back" size={26} color="gray" />
+            </Pressable>
+          ),
+        }}
+      />
     </Stack>
   );
 }
