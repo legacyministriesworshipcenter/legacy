@@ -1,3 +1,4 @@
+
 import { Stack, router } from 'expo-router';
 import { View, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,7 +17,7 @@ export default function MoreLayout() {
         headerStyle: {
           backgroundColor: colorScheme === 'dark' ? '#151718' : '#fff',
         },
-        headerTitle: () => null, // Titles handled by individual screens
+        headerTitle: () => null,
       }}
     >
       <Stack.Screen
@@ -33,6 +34,7 @@ export default function MoreLayout() {
             </View>
           ),
           headerTitleAlign: 'center',
+          headerLeft: () => null,
         }}
       />
       <Stack.Screen
@@ -52,7 +54,7 @@ export default function MoreLayout() {
           headerLeft: () => (
             <Pressable
               hitSlop={8}
-              onPress={() => router.push('/(tabs)/more/index')}
+              onPress={() => router.push('/(tabs)/more')}
               style={{ paddingLeft: 16 }}
             >
               <Ionicons name="arrow-back" size={26} color="gray" />
@@ -77,7 +79,7 @@ export default function MoreLayout() {
           headerLeft: () => (
             <Pressable
               hitSlop={8}
-              onPress={() => router.back()}
+              onPress={() => router.push('/(tabs)/more')}
               style={{ paddingLeft: 16 }}
             >
               <Ionicons name="arrow-back" size={26} color="gray" />
@@ -102,7 +104,7 @@ export default function MoreLayout() {
           headerLeft: () => (
             <Pressable
               hitSlop={8}
-              onPress={() => router.back()}
+              onPress={() => router.push('/(tabs)/more/admin')}
               style={{ paddingLeft: 16 }}
             >
               <Ionicons name="arrow-back" size={26} color="gray" />
@@ -127,7 +129,7 @@ export default function MoreLayout() {
           headerLeft: () => (
             <Pressable
               hitSlop={8}
-              onPress={() => router.back()}
+              onPress={() => router.push('/(tabs)/more/admin')}
               style={{ paddingLeft: 16 }}
             >
               <Ionicons name="arrow-back" size={26} color="gray" />
@@ -152,7 +154,7 @@ export default function MoreLayout() {
           headerLeft: () => (
             <Pressable
               hitSlop={8}
-              onPress={() => router.back()}
+              onPress={() => router.push('/(tabs)/more/admin')}
               style={{ paddingLeft: 16 }}
             >
               <Ionicons name="arrow-back" size={26} color="gray" />
@@ -177,7 +179,7 @@ export default function MoreLayout() {
           headerLeft: () => (
             <Pressable
               hitSlop={8}
-              onPress={() => router.back()}
+              onPress={() => router.push('/(tabs)/more/admin')}
               style={{ paddingLeft: 16 }}
             >
               <Ionicons name="arrow-back" size={26} color="gray" />
