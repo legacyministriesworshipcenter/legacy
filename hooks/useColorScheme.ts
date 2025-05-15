@@ -4,19 +4,15 @@ import { useEffect, useState } from 'react';
 // Unified useColorScheme hook for all platforms
 export function useColorScheme() {
   const colorScheme = useRNColorScheme();
+  const [isWebHydrated, setIsWebHydrated] = useState(false);
   const isWeb = typeof window !== 'undefined';
 
-  // Only apply web hydration logic on web platforms
-  if (isWeb) {
-    const [isWebHydrated, setIsWebHydrated] = useState(false);
-
-    useEffect(() => {
+  useEffect(() => {
+    if (isWeb) {
       setIsWebHydrated(true);
-    }, []);
+    }
+  }, [isWeb]);
 
-    return isWebHydrated ? colorScheme : 'light';
-  }
-
-  // Native platforms use react-native's useColorScheme directly
-  return colorScheme;
+  // On web, return 'light' until hydrated; on native, return system colorScheme directly
+  return isWeb ? (isWebHydrated ? colorScheme : 'light') : colorScheme;
 }
