@@ -1,3 +1,4 @@
+
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -10,36 +11,42 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AudioProvider } from '@/lib/audio-context';
 
-// Create QueryClient instance
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 2,
-      staleTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 60 * 5,
     },
   },
 });
 
 export default function RootLayout() {
-  const [fontsReady] = Font.useFonts(Ionicons.font);
-  const [initialSessionChecked, setChecked] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
+  const colorScheme = useColorScheme();
 
   useEffect(() => {
-    console.log('Fonts ready:', fontsReady);
-    const session = supabase.auth.session();
-    setSignedIn(!!session);
-    setChecked(true);
+    async function prepare() {
+      try {
+        await Font.loadAsync(Ionicons.font);
+        const session = supabase.auth.session();
+        setSignedIn(!!session);
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setIsReady(true);
+      }
+    }
+
+    prepare();
 
     const { data: subscription } = supabase.auth.onAuthStateChange((_e, s) => setSignedIn(!!s));
     return () => subscription?.unsubscribe();
   }, []);
 
-  if (!fontsReady || !initialSessionChecked) {
+  if (!isReady) {
     return null;
   }
-
-  const colorScheme = useColorScheme();
 
   return (
     <QueryClientProvider client={queryClient}>
