@@ -109,6 +109,15 @@ export default function ConnectLayout() {
             </View>
           ),
           headerTitleAlign: 'center',
+          headerLeft: () => (
+            <Pressable
+              hitSlop={8}
+              onPress={() => router.push('/(tabs)/connect')}
+              style={{ paddingLeft: 16 }}
+            >
+              <Ionicons name="arrow-back" size={26} color="gray" />
+            </Pressable>
+          ),
         }}
       />
       <Stack.Screen
