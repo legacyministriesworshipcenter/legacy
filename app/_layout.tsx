@@ -10,41 +10,50 @@ import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/lib/supabase';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-export default function RootLayout() {
-  /* ─── 1. fonts (runs every render) ─── */
-  const [fontsReady] = Font.useFonts(Ionicons.font);
+// React Query imports
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-  /* ─── 2. auth session state ─── */
+// Create QueryClient instance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    },
+  },
+});
+
+export default function RootLayout() {
+  const [fontsReady] = Font.useFonts(Ionicons.font);
   const [initialSessionChecked, setChecked] = useState(false);
-  const [signedIn, setSignedIn]             = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
+    console.log('Fonts ready:', fontsReady);
     const session = supabase.auth.session();
     setSignedIn(!!session);
     setChecked(true);
 
-    const { data: subscription } =
-      supabase.auth.onAuthStateChange((_e, s) => setSignedIn(!!s));
-
+    const { data: subscription } = supabase.auth.onAuthStateChange((_e, s) => setSignedIn(!!s));
     return () => subscription?.unsubscribe();
   }, []);
 
-  /* ─── 3. theme hook (order fixed) ─── */
-  const colorScheme = useColorScheme();
-
-  /* ─── 4. render guard ─── */
+  // Move useColorScheme after render guard to ensure consistent hook order
   if (!fontsReady || !initialSessionChecked) {
-    return null;               // Hooks order is stable; safe to early-return JSX
+    return null;
   }
 
-  /* ─── 5. normal tree ─── */
+  const colorScheme = useColorScheme();
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        {signedIn ? <Stack.Screen name="(tabs)" /> : <Stack.Screen name="(auth)" />}
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack screenOptions={{ headerShown: false }}>
+          {signedIn ? <Stack.Screen name="(tabs)" /> : <Stack.Screen name="(auth)" />}
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

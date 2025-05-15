@@ -6,12 +6,12 @@ import {
   FlatList,
   Pressable,
   useWindowDimensions,
-  useColorScheme,
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Ionicons } from '@expo/vector-icons';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 import { Colors } from '@/constants/Colors';
 import { supabase } from '@/lib/supabase';

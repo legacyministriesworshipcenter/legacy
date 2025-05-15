@@ -1,8 +1,9 @@
-import { Stack } from 'expo-router';
-import { View } from 'react-native';
+import { Stack, router } from 'expo-router';
+import { View, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function ConnectLayout() {
   const colorScheme = useColorScheme();
@@ -15,7 +16,7 @@ export default function ConnectLayout() {
         headerStyle: {
           backgroundColor: colorScheme === 'dark' ? '#151718' : '#fff',
         },
-        headerTitle: () => null, // Titles handled by individual screens
+        headerTitle: () => null,
       }}
     >
       <Stack.Screen
@@ -80,6 +81,47 @@ export default function ConnectLayout() {
             </View>
           ),
           headerTitleAlign: 'center',
+        }}
+      />
+      <Stack.Screen
+        name="events"
+        options={{
+          headerTitle: () => (
+            <View style={{ alignItems: 'center', paddingBottom: 8 }}>
+              <ThemedText
+                type="title"
+                style={{ fontSize: 22, fontWeight: '700' }}
+              >
+                Events
+              </ThemedText>
+            </View>
+          ),
+          headerTitleAlign: 'center',
+        }}
+      />
+      <Stack.Screen
+        name="event-detail"
+        options={{
+          headerTitle: () => (
+            <View style={{ alignItems: 'center', paddingBottom: 8 }}>
+              <ThemedText
+                type="title"
+                style={{ fontSize: 22, fontWeight: '700' }}
+              >
+                Event Details
+              </ThemedText>
+            </View>
+          ),
+          headerTitleAlign: 'center',
+          headerLeft: () => (
+            <Pressable
+              hitSlop={8}
+              onPress={() => router.back()}
+              style={{ paddingLeft: 16 }}
+            >
+              <Ionicons name="arrow-back" size={26} color="gray" />
+            </Pressable>
+          ),
         }}
       />
     </Stack>
