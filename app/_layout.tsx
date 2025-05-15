@@ -24,6 +24,7 @@ const queryClient = new QueryClient({
 });
 
 export default function RootLayout() {
+  const colorScheme = useColorScheme();
   const [fontsReady] = Font.useFonts(Ionicons.font);
   const [initialSessionChecked, setChecked] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
@@ -38,12 +39,9 @@ export default function RootLayout() {
     return () => subscription?.unsubscribe();
   }, []);
 
-  // Move useColorScheme after render guard to ensure consistent hook order
   if (!fontsReady || !initialSessionChecked) {
     return null;
   }
-
-  const colorScheme = useColorScheme();
 
   return (
     <QueryClientProvider client={queryClient}>
