@@ -33,6 +33,7 @@ export default function ConnectLayout() {
             </View>
           ),
           headerTitleAlign: 'center',
+          headerLeft: () => null,
         }}
       />
       <Stack.Screen
