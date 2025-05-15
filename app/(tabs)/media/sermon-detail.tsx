@@ -65,11 +65,8 @@ export default function SermonDetailScreen() {
       return () => {
         console.log('Screen blurred, sermon id:', id, 'isPlaying:', isPlaying);
         setIsFocused(false);
-        if (isPlaying) {
-          pauseAudio().catch((err) => console.log('Pause error on blur:', err));
-        }
       };
-    }, [pauseAudio, isPlaying])
+    }, [id])
   );
 
   // Play or pause audio
