@@ -31,11 +31,36 @@ export default function PrayerRequestsScreen() {
   });
 
   const handleAction = async (id: string, action: 'approve' | 'reject') => {
+    const user = supabase.auth.user();
+    if (!user) {
+      console.log('No user logged in');
+      Alert.alert('Error', 'You must be logged in to perform this action.');
+      return;
+    }
+
+    // Verify admin role (for debugging)
+    const { data: roleData, error: roleError } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .single();
+
+    if (roleError || roleData?.role !== 'admin') {
+      console.log('User is not an admin:', roleError?.message || 'Role not admin');
+      Alert.alert('Error', 'You are not authorized to perform this action.');
+      return;
+    }
+
+    // Ensure id is a string
+    const prayerRequestId = String(id);
+    console.log(`Attempting to ${action} prayer request with id ${prayerRequestId}, type: ${typeof prayerRequestId}`);
+
     const newStatus = action === 'approve' ? 'approved' : 'rejected';
     const { data, error } = await supabase
       .from('prayer_requests')
       .update({ status: newStatus })
-      .eq('id', id);
+      .eq('id', prayerRequestId)
+      .select();
 
     if (error) {
       console.log(`Error ${action}ing prayer request:`, error);
@@ -44,7 +69,7 @@ export default function PrayerRequestsScreen() {
     }
 
     if (!data || data.length === 0) {
-      console.log(`No rows updated when ${action}ing prayer request with id ${id}`);
+      console.log(`No rows updated when ${action}ing prayer request with id ${prayerRequestId}`);
       Alert.alert('Error', `Failed to ${action} prayer request: No matching request found.`);
       return;
     }
