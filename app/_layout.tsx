@@ -2,6 +2,8 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import * as Font from 'expo-font';
@@ -28,7 +30,9 @@ export default function RootLayout() {
   useEffect(() => {
     async function prepare() {
       try {
-        await Font.loadAsync(Ionicons.font);
+        await Font.loadAsync({
+          ...Ionicons.font
+        });
         const session = supabase.auth.session();
         setSignedIn(!!session);
       } catch (e) {
