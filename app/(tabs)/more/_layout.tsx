@@ -102,7 +102,7 @@ export default function MoreLayout() {
           headerLeft: () => (
             <Pressable
               hitSlop={8}
-              onPress={() => router.back()}
+              onPress={() => router.push('/(tabs)/more/admin')}
               style={{ paddingLeft: 16 }}
             >
               <Ionicons name="arrow-back" size={26} color="gray" />
@@ -127,7 +127,7 @@ export default function MoreLayout() {
           headerLeft: () => (
             <Pressable
               hitSlop={8}
-              onPress={() => router.back()}
+              onPress={() => router.push('/(tabs)/more/admin')}
               style={{ paddingLeft: 16 }}
             >
               <Ionicons name="arrow-back" size={26} color="gray" />
@@ -152,7 +152,7 @@ export default function MoreLayout() {
           headerLeft: () => (
             <Pressable
               hitSlop={8}
-              onPress={() => router.back()}
+              onPress={() => router.push('/(tabs)/more/admin')}
               style={{ paddingLeft: 16 }}
             >
               <Ionicons name="arrow-back" size={26} color="gray" />
@@ -177,7 +177,7 @@ export default function MoreLayout() {
           headerLeft: () => (
             <Pressable
               hitSlop={8}
-              onPress={() => router.back()}
+              onPress={() => router.push('/(tabs)/more/admin')}
               style={{ paddingLeft: 16 }}
             >
               <Ionicons name="arrow-back" size={26} color="gray" />
