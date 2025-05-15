@@ -143,12 +143,12 @@ export default function SermonDetailScreen() {
                 <TouchableOpacity
                   style={styles.playButton}
                   onPress={toggleAudio}
-                  disabled={!sermon}
+                  disabled={!sermon?.media_url}
                 >
                   <Ionicons
                     name={isPlaying && currentSermonId === id ? 'pause' : 'play'}
-                    size={24}
-                    color={scheme === 'dark' ? '#fff' : '#000'}
+                    size={32}
+                    color={tint}
                   />
                 </TouchableOpacity>
                 <View style={styles.progressContainer}>
@@ -160,11 +160,11 @@ export default function SermonDetailScreen() {
                     minimumValue={0}
                     maximumValue={duration || 1}
                     value={position}
-                    onValueChange={seekToPosition}
+                    onSlidingComplete={seekToPosition}
                     minimumTrackTintColor={tint}
                     maximumTrackTintColor={scheme === 'dark' ? '#555' : '#ccc'}
                     thumbTintColor={tint}
-                    disabled={!sermon || currentSermonId !== id}
+                    disabled={!sermon?.media_url || currentSermonId !== id}
                   />
                   <ThemedText style={styles.timeText}>
                     {formatTime(duration)}
