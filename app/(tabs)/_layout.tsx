@@ -54,8 +54,21 @@ export default function TabLayout() {
       <Tabs.Screen
         name="give"
         options={{ 
-          title: 'Give', 
-          tabBarIcon: ({ color }) => <Ionicons name="heart" size={28} color={color}/> 
+          title: 'Give',
+          tabBarIcon: ({ color }) => <Ionicons name="heart" size={28} color={color}/>,
+          headerTransparent: false,
+          headerShadowVisible: true,
+          headerStyle: {
+            backgroundColor: colorScheme === 'dark' ? '#151718' : '#fff',
+          },
+          headerTitle: () => (
+            <View style={{ alignItems: 'center', paddingBottom: 8 }}>
+              <ThemedText type="title" style={{ fontSize: 22, fontWeight: '700' }}>
+                Give
+              </ThemedText>
+            </View>
+          ),
+          headerTitleAlign: 'center',
         }}
       />
       <Tabs.Screen
