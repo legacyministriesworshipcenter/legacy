@@ -78,7 +78,7 @@ export default function ConnectLayout() {
           headerLeft: () => (
             <Pressable
               hitSlop={8}
-              onPress={() => router.push('/(tabs)/connect')}
+              onPress={() => router.push('/(tabs)/connect/groups')}
               style={{ paddingLeft: 16 }}
             >
               <Ionicons name="arrow-back" size={26} color="gray" />
