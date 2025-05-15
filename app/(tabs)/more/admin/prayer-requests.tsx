@@ -16,6 +16,21 @@ export default function PrayerRequestsScreen() {
   const textColor = scheme === 'dark' ? '#fff' : '#000';
 
   const fetchPrayerRequests = async () => {
+    const user = supabase.auth.user();
+    if (!user) {
+      throw new Error('No user logged in');
+    }
+
+    const { data: roleData, error: roleError } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .single();
+
+    if (roleError || roleData?.role !== 'admin') {
+      throw new Error(roleError?.message || 'User is not an admin');
+    }
+
     const { data, error } = await supabase
       .from('prayer_requests')
       .select('id, user_id, request, created_at, status')
@@ -38,7 +53,7 @@ export default function PrayerRequestsScreen() {
       return;
     }
 
-    // Verify admin role (for debugging)
+    // Verify admin role
     const { data: roleData, error: roleError } = await supabase
       .from('user_roles')
       .select('role')
@@ -46,16 +61,18 @@ export default function PrayerRequestsScreen() {
       .single();
 
     if (roleError || roleData?.role !== 'admin') {
-      console.log('User is not an admin:', roleError?.message || 'Role not admin');
+      console.log('User role check failed:', roleError?.message || 'Not an admin');
       Alert.alert('Error', 'You are not authorized to perform this action.');
       return;
     }
 
-    // Ensure id is a string
+    // Ensure id is a string and log its value
     const prayerRequestId = String(id);
-    console.log(`Attempting to ${action} prayer request with id ${prayerRequestId}, type: ${typeof prayerRequestId}`);
+    console.log(`Attempting to ${action} prayer request with id: ${prayerRequestId}, type: ${typeof prayerRequestId}`);
 
     const newStatus = action === 'approve' ? 'approved' : 'rejected';
+    console.log(`Updating status to: ${newStatus}`);
+
     const { data, error } = await supabase
       .from('prayer_requests')
       .update({ status: newStatus })
