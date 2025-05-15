@@ -76,7 +76,6 @@ export default function TabLayout() {
         options={{ 
           title: 'More',
           tabBarIcon: ({ color }) => <Ionicons name="menu" size={28} color={color}/>,
-          href: '/(tabs)/more'
         }}
       />
 
