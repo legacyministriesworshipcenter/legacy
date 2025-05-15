@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
@@ -24,6 +24,7 @@ export default function SermonDetailScreen() {
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
   const [audioError, setAudioError] = useState<string | null>(null);
+  const [isFocused, setIsFocused] = useState(true);
 
   const fetchSermonDetail = async () => {
     const { data, error } = await supabase
@@ -42,28 +43,33 @@ export default function SermonDetailScreen() {
   });
 
   // Update local state based on global audio context
-  useEffect(() => {
-    const updateStatus = () => {
-      const { isPlaying: playing, position: pos, duration: dur } = getPlaybackStatus();
-      setIsPlaying(playing && currentSermonId === id);
-      setPosition(pos);
-      setDuration(dur);
-    };
+  const updateStatus = useCallback(() => {
+    const { isPlaying: playing, position: pos, duration: dur } = getPlaybackStatus();
+    setIsPlaying(playing && currentSermonId === id);
+    setPosition(pos);
+    setDuration(dur);
+  }, [getPlaybackStatus, currentSermonId, id]);
 
+  useEffect(() => {
     const interval = setInterval(updateStatus, 500);
     updateStatus();
 
     return () => clearInterval(interval);
-  }, [getPlaybackStatus, currentSermonId, id]);
+  }, [updateStatus]);
 
-  // Pause audio when screen loses focus
+  // Manage focus state to prevent premature pausing
   useFocusEffect(
     React.useCallback(() => {
+      console.log('Screen focused, sermon id:', id);
+      setIsFocused(true);
       return () => {
-        console.log('Screen blurred, sermon id:', id);
-        pauseAudio().catch((err) => console.log('Pause error on blur:', err));
+        console.log('Screen blurred, sermon id:', id, 'isPlaying:', isPlaying);
+        setIsFocused(false);
+        if (isPlaying) {
+          pauseAudio().catch((err) => console.log('Pause error on blur:', err));
+        }
       };
-    }, [pauseAudio])
+    }, [pauseAudio, isPlaying])
   );
 
   // Play or pause audio
@@ -72,7 +78,7 @@ export default function SermonDetailScreen() {
     try {
       if (isPlaying && currentSermonId === id) {
         await pauseAudio();
-      } else {
+      } else if (isFocused) {
         await playAudio(sermon.media_url, id);
       }
     } catch (err) {
