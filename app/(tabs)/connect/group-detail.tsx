@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
@@ -13,6 +13,7 @@ export default function GroupDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const scheme = useColorScheme();
   const tint = Colors[scheme ?? 'light'].tint;
+  const [submissionStatus, setSubmissionStatus] = useState<string | null>(null);
 
   const fetchGroupDetail = async () => {
     const { data, error } = await supabase
@@ -31,26 +32,54 @@ export default function GroupDetailScreen() {
   });
 
   const requestJoin = async () => {
-    // Check if user is authenticated
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError || !userData.user) {
+    setSubmissionStatus(null);
+
+    const user = supabase.auth.user();
+    if (!user) {
       Alert.alert('Error', 'You must be logged in to join a group.', [
         { text: 'Cancel', style: 'cancel' },
         { text: 'Log In', onPress: () => router.push('/(auth)/login') },
       ]);
+      setSubmissionStatus('Error: You must be logged in to join a group.');
+      return;
+    }
+
+    // Check if the user has already requested to join this group
+    const { data: existingMembership, error: checkError } = await supabase
+      .from('group_memberships')
+      .select('*')
+      .eq('group_id', id)
+      .eq('user_id', user.id)
+      .single();
+
+    if (checkError && checkError.code !== 'PGRST116') { // PGRST116: No rows found
+      console.log('Error checking existing membership:', checkError);
+      Alert.alert('Error', `Failed to check membership status: ${checkError.message}`);
+      setSubmissionStatus(`Error: ${checkError.message}`);
+      return;
+    }
+
+    if (existingMembership) {
+      Alert.alert('Already Requested', 'You have already requested to join this group.');
+      setSubmissionStatus('You have already requested to join this group.');
       return;
     }
 
     const { error } = await supabase.from('group_memberships').insert({
       group_id: id,
-      user_id: userData.user.id,
+      user_id: user.id,
       status: 'pending',
+      role: 'member', // Added to satisfy NOT NULL constraint
     });
 
     if (error) {
+      console.log('Group Join Request Error:', error);
       Alert.alert('Error', `Failed to request join: ${error.message}`);
+      setSubmissionStatus(`Error: ${error.message}`);
     } else {
+      console.log('Group Join Request Submitted Successfully');
       Alert.alert('Success', 'Your request to join has been sent!');
+      setSubmissionStatus('Your request to join has been sent!');
     }
   };
 
@@ -76,6 +105,17 @@ export default function GroupDetailScreen() {
         <ThemedText style={styles.details}>Leader: {group.leader}</ThemedText>
         <ThemedText style={styles.details}>Location: {group.location}</ThemedText>
         <ThemedText style={styles.details}>Time: {group.meeting_time}</ThemedText>
+        <ThemedText style={styles.details}>Role: {group.role}</ThemedText>
+        {submissionStatus && (
+          <ThemedText
+            style={[
+              styles.statusMessage,
+              { color: submissionStatus.includes('Error') ? (scheme === 'dark' ? '#f88' : 'red') : (scheme === 'dark' ? '#0f0' : 'green') },
+            ]}
+          >
+            {submissionStatus}
+          </ThemedText>
+        )}
         <TouchableOpacity
           style={[styles.button, { backgroundColor: tint }]}
           onPress={requestJoin}
@@ -97,6 +137,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
   description: { fontSize: 16, marginBottom: 16 },
   details: { fontSize: 16, marginVertical: 4, color: '#555' },
+  statusMessage: { fontSize: 16, textAlign: 'center', marginTop: 16 },
   button: {
     padding: 12,
     borderRadius: 8,
