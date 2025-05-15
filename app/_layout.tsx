@@ -30,7 +30,8 @@ export default function RootLayout() {
       try {
         await Font.loadAsync({
           ...Ionicons.font,
-          'MaterialIcons': require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/MaterialIcons.ttf')
+          'MaterialIcons': require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/MaterialIcons.ttf'),
+          'Ionicons': require('@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf')
         });
         const session = supabase.auth.session();
         setSignedIn(!!session);
